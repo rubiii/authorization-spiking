@@ -2,17 +2,17 @@ require_relative '../lib/yaml_permission_store'
 require_relative '../lib/permission'
 require_relative '../lib/security_proxy'
 
-class Foo
-  def self.foo
-    'class foo'
+class Task
+  def self.start
+    '(class) start task'
   end
 
-  def foo
-    'foo'
+  def start
+    'start task'
   end
 
-  def bar
-    'bar'
+  def finish
+    'finish task'
   end
 end
 
@@ -21,8 +21,8 @@ describe 'The SecurityProxy' do
   let(:config) do
     <<-CONFIG.gsub(/^ {6}/, '')
       ---
-      Foo:
-        foo:
+      Task:
+        start:
           roles:
             - king
     CONFIG
@@ -35,39 +35,46 @@ describe 'The SecurityProxy' do
 
   it 'rejects a method one is not allowed to call' do
     permission = Permission.new(permission_store, pawn)
-    secure_foo = SecurityProxy.new(Foo.new, permission)
+    secure_task = SecurityProxy.new(Task.new, permission)
 
-    expect { secure_foo.foo }.
+    expect { secure_task.start }.
       to raise_error('Not allowed!')
   end
 
   it 'rejects a method for which no permissions are defined' do
     permission = Permission.new(permission_store, king)
-    secure_foo = SecurityProxy.new(Foo.new, permission)
+    secure_task = SecurityProxy.new(Task.new, permission)
 
-    expect { secure_foo.bar }.
+    expect { secure_task.finish }.
       to raise_error('No Permission defined.')
   end
 
   it 'calls methods one is allowed to call' do
     permission = Permission.new(permission_store, king)
-    secure_foo = SecurityProxy.new(Foo.new, permission)
+    secure_task = SecurityProxy.new(Task.new, permission)
 
-    secure_foo.foo.should == 'foo'
+    secure_task.start.should == 'start task'
   end
 
   it 'rejects a class method one is not allowed to call' do
     permission = Permission.new(permission_store, pawn)
-    secure_foo = SecurityProxy.new(Foo, permission)
+    secure_task = SecurityProxy.new(Task, permission)
 
-    expect { secure_foo.foo }.
+    expect { secure_task.start }.
       to raise_error('Not allowed!')
   end
 
   it "calls class methods one is allowed to call" do
     permission = Permission.new(permission_store, king)
-    secure_foo = SecurityProxy.new(Foo, permission)
+    secure_task = SecurityProxy.new(Task, permission)
 
-    secure_foo.foo.should == 'class foo'
+    secure_task.start.should == '(class) start task'
+  end
+
+  it "is fucking dynamic" do
+    permission = Permission.new(permission_store, king)
+    secure_task = SecurityProxy.new(Task, permission)
+
+    #secure_task.start.should == '(class) start task'
   end
 end
