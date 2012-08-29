@@ -26,25 +26,23 @@ describe 'The SecurityProxy' do
 
   let(:permission_store) { YamlPermissionStore.new(config) }
 
-  let(:king) { stub(:roles => ['king'] )}
-  let(:pawn) { stub(:roles => ['pawn'] )}
+  let(:king) { stub(roles: ['king']) }
+  let(:pawn) { stub(roles: ['pawn']) }
 
   it 'rejects a method one is not allowed to call' do
     permission = Permission.new(permission_store, pawn)
     secure_foo = SecurityProxy.new(Foo.new, permission)
 
-    expect {
-      secure_foo.foo
-    }.to raise_error('Not allowed!')
+    expect { secure_foo.foo }.
+      to raise_error('Not allowed!')
   end
 
   it 'rejects a method for which no permissions are defined' do
     permission = Permission.new(permission_store, king)
     secure_foo = SecurityProxy.new(Foo.new, permission)
 
-    expect {
-      secure_foo.bar
-    }.to raise_error 'No Permission defined.'
+    expect { secure_foo.bar }.
+      to raise_error('No Permission defined.')
   end
 
   it 'calls methods one is allowed to call' do
