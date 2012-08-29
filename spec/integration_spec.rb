@@ -3,6 +3,10 @@ require_relative '../permission'
 require_relative '../security_proxy'
 
 class Foo
+  def self.foo
+    'class foo'
+  end
+
   def foo
     'foo'
   end
@@ -50,5 +54,20 @@ describe 'The SecurityProxy' do
     secure_foo = SecurityProxy.new(Foo.new, permission)
 
     secure_foo.foo.should == 'foo'
+  end
+
+  it 'rejects a class method one is not allowed to call' do
+    permission = Permission.new(permission_store, pawn)
+    secure_foo = SecurityProxy.new(Foo, permission)
+
+    expect { secure_foo.foo }.
+      to raise_error('Not allowed!')
+  end
+
+  it "calls class methods one is allowed to call" do
+    permission = Permission.new(permission_store, king)
+    secure_foo = SecurityProxy.new(Foo, permission)
+
+    secure_foo.foo.should == 'class foo'
   end
 end
