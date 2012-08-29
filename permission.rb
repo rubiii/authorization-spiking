@@ -1,13 +1,13 @@
 class Permission
-  attr_reader :tree, :permission_store, :user
 
   def initialize(permission_store, user)
-    @tree = {}
     @permission_store = permission_store
     @user = user
   end
 
-  def update
+  attr_reader :user, :permission_store
+
+  def tree
     @tree = permission_store.load_permissions(user)
   end
 

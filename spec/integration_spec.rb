@@ -31,7 +31,6 @@ describe 'The SecurityProxy' do
 
   it 'rejects a method one is not allowed to call' do
     permission = Permission.new(permission_store, pawn)
-    permission.update
     secure_foo = SecurityProxy.new(Foo.new, permission)
 
     expect {
@@ -41,7 +40,6 @@ describe 'The SecurityProxy' do
 
   it 'rejects a method for which no permissions are defined' do
     permission = Permission.new(permission_store, king)
-    permission.update
     secure_foo = SecurityProxy.new(Foo.new, permission)
 
     expect {
@@ -51,7 +49,6 @@ describe 'The SecurityProxy' do
 
   it 'calls methods one is allowed to call' do
     permission = Permission.new(permission_store, king)
-    permission.update
     secure_foo = SecurityProxy.new(Foo.new, permission)
 
     secure_foo.foo.should == 'foo'
