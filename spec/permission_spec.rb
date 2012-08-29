@@ -1,4 +1,4 @@
-require_relative '../permission'
+require_relative '../lib/permission'
 
 describe Permission do
 

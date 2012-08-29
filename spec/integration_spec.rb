@@ -1,6 +1,6 @@
-require_relative '../yaml_permission_store'
-require_relative '../permission'
-require_relative '../security_proxy'
+require_relative '../lib/yaml_permission_store'
+require_relative '../lib/permission'
+require_relative '../lib/security_proxy'
 
 class Foo
   def self.foo

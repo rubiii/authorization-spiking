@@ -1,4 +1,4 @@
-require_relative '../permission_store'
+require_relative '../lib/permission_store'
 
 describe PermissionStore do
   describe 'load_permissions' do

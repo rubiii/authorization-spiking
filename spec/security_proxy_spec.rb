@@ -1,4 +1,4 @@
-require_relative '../security_proxy'
+require_relative '../lib/security_proxy'
 
 class TestFoo
   def foo

@@ -1,4 +1,4 @@
-require_relative '../yaml_permission_store'
+require_relative '../lib/yaml_permission_store'
 
 describe YamlPermissionStore do
   describe 'new' do
