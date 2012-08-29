@@ -71,10 +71,24 @@ describe 'The SecurityProxy' do
     secure_task.start.should == '(class) start task'
   end
 
-  it "is fucking dynamic" do
-    permission = Permission.new(permission_store, king)
-    secure_task = SecurityProxy.new(Task, permission)
+  it "can be extened to allow custom dynamic authorisation" do
+    finish = Module.new do
+      def finish
+        if user.allowed_to_finish?
+          subject.finish
+        else
+          raise '(dynamic) not allowed'
+        end
+      end
+    end
 
-    #secure_task.start.should == '(class) start task'
+    user = stub
+    user.should_receive(:allowed_to_finish?).and_return(true)
+
+    permission = Permission.new(permission_store, king)
+    secure_task = SecurityProxy.new(Task.new, permission, user)
+    secure_task.extend(finish)
+
+    secure_task.finish.should == 'finish task'
   end
 end
