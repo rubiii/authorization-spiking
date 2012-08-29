@@ -8,7 +8,7 @@ class Permission
   attr_reader :user, :permission_store
 
   def tree
-    @tree = permission_store.load_permissions(user)
+    @tree ||= permission_store.load_permissions(user)
   end
 
   def for(class_object, method)
